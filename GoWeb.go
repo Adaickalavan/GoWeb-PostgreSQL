@@ -2,16 +2,17 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"regexp"
+	"fmt"
 )
 
-func viewhandler(w http.ResponseWriter, r *http.Request) {
+func viewhandler(w http.ResponseWriter, r *http.Request, title string) {
 	title, err := getTitle(w, r)
 	if err != nil {
+		fmt.Println("inside viewhandler",err)
 		return
 	}
 	p, err := loadPage(title)
@@ -22,7 +23,7 @@ func viewhandler(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "view", p)
 }
 
-func edithandler(w http.ResponseWriter, r *http.Request) {
+func edithandler(w http.ResponseWriter, r *http.Request, title string) {
 	title, err := getTitle(w, r)
 	if err != nil {
 		return
@@ -42,7 +43,7 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	}
 }
 
-func savehandler(w http.ResponseWriter, r *http.Request) {
+func savehandler(w http.ResponseWriter, r *http.Request, title string) {
 	title, err := getTitle(w, r)
 	if err != nil {
 		return
@@ -58,6 +59,7 @@ func savehandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
+	fmt.Println(r.URL.Path)
 	m := validPath.FindStringSubmatch(r.URL.Path)
 	if m == nil {
 		http.NotFound(w, r)
