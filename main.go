@@ -19,15 +19,15 @@ func newRouter() *mux.Router {
 	// Declare a router
 	router := mux.NewRouter()
 	// Handler for specified path
-	router.HandleFunc("/hello", handler).Methods("POST")
+	router.HandleFunc("/hello", handler).Methods("GET")
 	// Declare static file directory
-	// staticFileDirectory := http.Dir("/assests/")
-	//
-	// staticFileHandler := http.StripPrefix("/assets/", http.FileServer())
+	staticFileDirectory := http.Dir("/assets/")
+	// Create static file handler
+	staticFileServer := http.FileServer(staticFileDirectory)
+	staticFileHandler := http.StripPrefix("/data/", staticFileServer)
+	// http.Handle
 
-	data := todo{
-		page: "hi",
-	}
+	router.Handle("/data/", staticFileHandler)
 
 	return router
 }
@@ -35,5 +35,3 @@ func newRouter() *mux.Router {
 func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Hi, the world is beautiful")
 }
-
-
