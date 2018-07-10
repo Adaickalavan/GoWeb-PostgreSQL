@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -49,17 +48,12 @@ var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
 var validPath = regexp.MustCompile("^/(edit|view|save)/([a-zA-Z0-9]+)$")
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
-	fmt.Println("inside makehandler")
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("inside func 2")
 		m := validPath.FindStringSubmatch(r.URL.Path)
-		fmt.Println("after find substring")
 		if m == nil {
 			http.NotFound(w, r)
-			fmt.Println("inside m nil")
 			return
 		}
-		fmt.Println("outside m nil")
 		fn(w, r, m[2])
 	}
 }
