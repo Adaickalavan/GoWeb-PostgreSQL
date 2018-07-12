@@ -13,11 +13,11 @@ type Person struct {
 	Occupation string `json:"occupation"`
 }
 
-var persons []Person
+var personList []Person
 
 func getPersonHandler(w http.ResponseWriter, r *http.Request) {
 	// Convert the "persons" variable to json
-	personListBytes, err := json.Marshal(persons)
+	personListBytes, err := json.Marshal(personList)
 	if err != nil {
 		fmt.Println(fmt.Errorf("Error: %v", err))
 		w.WriteHeader(http.StatusInternalServerError)
@@ -43,7 +43,7 @@ func createPersonHandler(w http.ResponseWriter, r *http.Request) {
 	person.Occupation = r.Form.Get("occupation")
 
 	// Append our existing list of persons with a new entry
-	persons = append(persons, person)
+	personList = append(personList, person)
 
 	//Redirect to the original HTML page
 	http.Redirect(w, r, "/", http.StatusFound)
