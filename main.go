@@ -1,35 +1,32 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-func main() {
-	// Create router
-	router := newRouter()
-	// Listen to the port
-	log.Fatal(http.ListenAndServe(":8080", router))
-}
-
 func newRouter() *mux.Router {
 	// Declare a router
-	router := mux.NewRouter()
-	// Handler for specified path
-	router.HandleFunc("/hello", handler).Methods("GET")
+	r := mux.NewRouter()
 	// Declare static file directory
-	staticFileDirectory := http.Dir("./assets/")
-	// Create static file handler
+	staticFileDirectory := http.Dir("./static/")
+	// Create static file server
 	staticFileServer := http.FileServer(staticFileDirectory)
-	staticFileHandler := http.StripPrefix("/data/", staticFileServer)
-	router.PathPrefix("/data/").Handler(staticFileHandler).Methods("GET")
+	// Create file handler
+	staticFileHandler := http.StripPrefix("/", staticFileServer)
+	// Add handler to router
+	r.Handle("/", staticFileHandler).Methods("GET")
+	// Add handler for get and post people
+	r.HandleFunc("/person", getPersonHandler).Methods("GET")
+	r.HandleFunc("/person", createPersonHandler).Methods("POST")
 
-	return router
+	return r
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hi, the world is beautiful")
+func main() {
+	// Create router
+	r := newRouter()
+	// Listen to the port
+	http.ListenAndServe(":8080", r)
 }
