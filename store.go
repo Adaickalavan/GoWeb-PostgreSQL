@@ -21,15 +21,15 @@ func (store *dbStore) CreatePerson(person *Person) error {
 	// 'Person' is a struct which has "nama", "birthday", and "occupation" attributes
 	// Note: `peopleInfo` is the name of the table within our `peopleDatabase`
 	_, err := store.db.Query(
-		"INSERT INTO peopleInfo(nama,birthday,occupation) VALUES ($1,$2,$3)",
+		"INSERT INTO peopleinfo(nama,birthday,occupation) VALUES ($1,$2,$3)",
 		person.Nama, person.Birthday, person.Occupation)
 	return err
 }
 
-func (store *dbStore) GetPeople() ([]*Person, error) {
+func (store *dbStore) GetPerson() ([]*Person, error) {
 	// Query the database for all persons, and return the result to the `rows` object
-	// Note: `peopleInfo` is the name of the table within our `peopleDatabase``
-	rows, err := store.db.Query("SELECT nama, birthday, occupation from peopleInfo")
+	// Note: `peopleinfo` is the name of the table within our `peopleDatabase``
+	rows, err := store.db.Query("SELECT nama, birthday, occupation FROM peopleinfo")
 	if err != nil {
 		return nil, err
 	}
@@ -51,15 +51,10 @@ func (store *dbStore) GetPeople() ([]*Person, error) {
 	return personList, nil
 }
 
-// Define a `store` variable which is a package level variable
-var store Store
-
 /*
 We will need to call the InitStore method to initialize the store. This will
 typically be done at the beginning of our application (in this case, when the server starts up)
 This can also be used to set up the store as a mock, which we will be observing
 later on
 */
-func InitStore(s Store) {
-	store = s
-}
+

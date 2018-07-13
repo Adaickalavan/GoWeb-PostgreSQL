@@ -13,11 +13,13 @@ type Person struct {
 	Occupation string `json:"occupation"`
 }
 
-var personList []Person
-
 func getPersonHandler(w http.ResponseWriter, r *http.Request) {
-	// Convert the "persons" variable to json
+	// Retrieve people from postgresql database using our `store` interface variable defined in `store.go` file
+	personList, err := store.GetPerson()
+
+	// Convert the `personList` variable to json
 	personListBytes, err := json.Marshal(personList)
+
 	if err != nil {
 		fmt.Println(fmt.Errorf("Error: %v", err))
 		w.WriteHeader(http.StatusInternalServerError)
@@ -42,8 +44,11 @@ func createPersonHandler(w http.ResponseWriter, r *http.Request) {
 	person.Birthday = r.Form.Get("birthday")
 	person.Occupation = r.Form.Get("occupation")
 
-	// Append our existing list of persons with a new entry
-	personList = append(personList, person)
+	// Write new person details into postgresql database using our `store` interface variable's `CreatePerson` method
+	err = store.CreatePerson(&person)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	//Redirect to the original HTML page
 	http.Redirect(w, r, "/", http.StatusFound)
