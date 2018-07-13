@@ -37,7 +37,7 @@
     }
 
     /* Styling for our input form */
-    input[type=text], select {
+    input[type=text] {
       width: 100%;
       padding: 12px 20px;
       margin: 8px 0;
@@ -74,9 +74,8 @@
 <body>
   <h1>People Database</h1>
   <!-- 
-    This section of the document specifies the table that will
-    be used to display the list of persons and their birthday
-   -->
+    Specify the table that will be used to display the people database
+  -->
   <table class="people">
     <tr>
       <th>Name</th>
@@ -87,10 +86,10 @@
   <br/>
 
   <!-- 
-    This section contains the form, that will be used to hit the 
-    `POST /person` API that we will build in the next section
+    Specify the user input form. Upon submission, the form will
+    call the route `/person` with method `POST`. This will trigger
+    the `func createPersonHandler` defined in `personHandler.go` file.
    -->
-  
   <div>
     <form action="/person" method="post">
       <h3>Add new person</h3>
@@ -110,22 +109,22 @@
    -->
   <script>
     personTable = document.querySelector("table")
-    // Use the browsers `fetch` API to make a GET call to /person
-    // Response is a JSON list of persons
+    // Use the browsers `fetch` API to make a GET call to `/person` route. This 
+    // will trigger the `func getPersonHandler` defined in `personHandler.go` file.
+    // The received response is a JSON list of persons.
     fetch("/person")
-      .then(response => response.json())
+      .then(response => response.json()) // Read the JSON body of the response
       .then(personList => {
         personList.forEach(person => {
           // Create the table row
-          row = document.createElement("tr")
-          // Create the table data elements
-          nama = document.createElement("td")
+          row = document.createElement("tr") 
+          // Create the table data elements and extract corresponding values from received `person`
+          nama = document.createElement("td") 
           nama.innerHTML = person.nama
           birthday = document.createElement("td")
           birthday.innerHTML = person.birthday
           occupation = document.createElement("td")
           occupation.innerHTML = person.occupation
-
           // Add the data elements to the row
           row.appendChild(nama)
           row.appendChild(birthday)
